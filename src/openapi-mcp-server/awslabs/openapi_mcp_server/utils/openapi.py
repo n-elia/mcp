@@ -107,7 +107,8 @@ def load_openapi_spec(url: str = '', path: str = '') -> Dict[str, Any]:
                         temp_file.write(response.content)
 
                     try:
-                        parser = ResolvingParser(temp_path)
+                        from prance.util.resolver import RESOLVE_INTERNAL
+                        parser = ResolvingParser(temp_path, recursion_limit=3, resolve_types=RESOLVE_INTERNAL)
                         spec = parser.specification
 
                         # Clean up the temporary file
@@ -160,7 +161,8 @@ def load_openapi_spec(url: str = '', path: str = '') -> Dict[str, Any]:
                 logger.info('Using prance for reference resolution')
                 # Use prance for reference resolution if available
                 try:
-                    parser = ResolvingParser(path)
+                    from prance.util.resolver import RESOLVE_INTERNAL
+                    parser = ResolvingParser(path, recursion_limit=3, resolve_types=RESOLVE_INTERNAL)
                     spec = parser.specification
                 except Exception as e:
                     logger.warning(
